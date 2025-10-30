@@ -1,0 +1,29 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+    depends_on:
+      - db
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: cloudlab
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cloudlab_db
+    ports:
+      - "5432:5432"
+  frontend:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    command: bash -c "npm install && npm run dev"
+
